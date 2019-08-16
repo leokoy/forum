@@ -1,0 +1,13 @@
+server:
+  port: 9009
+spring:
+  application:
+    name: tensquare-sms #指定服务名
+  rabbitmq:
+    host: 192.168.88.128
+aliyun:
+  sms:
+    accessKeyId: LTAI9TxNgdO2WLhq
+    accessKeySecret: n6Xvyy3P0l9avlEnnBFC3wD9UBrGjC
+    template_code: SMS_166377550
+    sign_name: 易水寒的刀
