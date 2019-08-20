@@ -1,5 +1,5 @@
 server:
-  port: 9001
+  port: 9091
 spring:
   application:
     name: tensquare-base #指定服务名 springcloud必须配置  服务名不能有下划线
@@ -12,3 +12,9 @@ spring:
     database: MySQL
     show-sql: true
     generate-ddl: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka
+  instance:
+    prefer-ip-address: true #是否已ip地址形式进行注册

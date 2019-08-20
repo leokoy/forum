@@ -5,7 +5,13 @@ spring:
     name: tensquare-spit #指定服务名
   data:
     mongodb:
-      host: 192.168.88.129
+      host: 192.168.88.128
       database: spitdb
   redis:
-    host: 192.168.88.129
+    host: 192.168.88.128
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka
+  instance:
+    prefer-ip-address: true #是否已ip地址形式进行注册

@@ -13,8 +13,9 @@ spring:
     show-sql: true
   redis: #redis默认本地地址 配置连接虚拟机
     host: 192.168.88.128
-
-  data:
-    mongodb:
-      host: 192.168.184.128
-      database: recruitdb
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka
+  instance:
+    prefer-ip-address: true #是否已ip地址形式进行注册

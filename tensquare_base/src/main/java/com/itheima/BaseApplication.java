@@ -2,6 +2,8 @@ package com.itheima;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import util.IdWorker;
 
@@ -9,6 +11,7 @@ import util.IdWorker;
  * 基础微服务启动类
  */
 @SpringBootApplication
+@EnableEurekaClient //启用组件 将当前微服务注册到注册中心
 public class BaseApplication {
 
     public static void main(String[] args) {

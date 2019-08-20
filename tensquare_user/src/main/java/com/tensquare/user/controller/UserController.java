@@ -1,7 +1,10 @@
 package com.tensquare.user.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.tensquare.user.pojo.Admin;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -122,7 +125,7 @@ public class UserController {
     public Result delete(@PathVariable String id) {
 
         //头信息Authorization ,内容为Bearer+空格+token
-        String authorization = request.getHeader("Authorization");
+        /*String authorization = request.getHeader("Authorization");
         if(StringUtils.isEmpty(authorization) || !authorization.startsWith("Bearer ")){
             return new Result(false, StatusCode.ACCESSERROR, "权限不足");
         }
@@ -133,6 +136,11 @@ public class UserController {
         }
         Claims claims = jwtUtil.parseJWT(token);
         if(claims == null || !claims.get("roles").equals("admin")){
+            return new Result(false, StatusCode.ACCESSERROR, "权限不足");
+        }*/
+
+        Claims admin_claims = (Claims)request.getAttribute("admin_claims");
+        if(admin_claims == null || !admin_claims.get("roles").equals("admin")){
             return new Result(false, StatusCode.ACCESSERROR, "权限不足");
         }
         userService.deleteById(id);
@@ -177,6 +185,13 @@ public class UserController {
         if (user == null) {
             return new Result(true, StatusCode.LOGINERROR, "用户登录失败");
         }
-        return new Result(true, StatusCode.OK, "用户登录成功", user);
+
+        //生成token
+        String userToken = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
+        //定义map
+        Map<String,Object> rsMap = new HashMap<>();
+        rsMap.put("user",user);
+        rsMap.put("token",userToken);
+        return new Result(true, StatusCode.OK, "用户登录成功", rsMap);
     }
 }

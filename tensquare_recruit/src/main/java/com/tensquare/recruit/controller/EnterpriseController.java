@@ -1,22 +1,28 @@
 package com.tensquare.recruit.controller;
 
-import com.tensquare.recruit.pojo.Enterprise;
-import com.tensquare.recruit.service.EnterpriseService;
-import entity.PageResult;
-import entity.Result;
-import entity.StatusCode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tensquare.recruit.pojo.Enterprise;
+import com.tensquare.recruit.service.EnterpriseService;
+
+import entity.PageResult;
+import entity.Result;
+import entity.StatusCode;
+
 /**
- * @author
- * @ClassName: EnterpriseController
- * @Description(描叙): 企业信息
- * @date 2019/8/14 10:34
+ * 控制器层
+ *
+ * @author Administrator
  */
 @RestController
 @CrossOrigin
@@ -26,21 +32,29 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
+
     /**
      * 查询全部数据
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public Result findAll(){
-        return new Result(true, StatusCode.OK,"查询成功",enterpriseService.findAll());
-
+    public Result findAll() {
+        return new Result(true, StatusCode.OK, "查询成功", enterpriseService.findAll());
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public Result findById(@PathVariable String id){
-        return new Result(true,StatusCode.OK,"查询成功",enterpriseService.findById(id));
-
+    /**
+     * 根据ID查询
+     *
+     * @param id ID
+     * @return
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Result findById(@PathVariable String id) {
+        return new Result(true, StatusCode.OK, "查询成功", enterpriseService.findById(id));
     }
+
+
     /**
      * 分页+多条件查询
      *

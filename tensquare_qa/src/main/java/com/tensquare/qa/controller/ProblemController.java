@@ -1,28 +1,42 @@
 package com.tensquare.qa.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import com.tensquare.qa.client.LabelClient;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tensquare.qa.pojo.Problem;
 import com.tensquare.qa.service.ProblemService;
+
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.tensquare.qa.pojo.Problem;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author
- * @ClassName: ProblemController
- * @Description(描叙): 问题控制层
- * @date 2019/8/14 13:07
+ * 控制器层
+ *
+ * @author Administrator
  */
 @RestController
 @CrossOrigin
 @RequestMapping("/problem")
 public class ProblemController {
+
     @Autowired
     private ProblemService problemService;
+    @Autowired
+    private HttpServletRequest request;
 
     /**
      * 查询全部数据
@@ -78,6 +92,10 @@ public class ProblemController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Problem problem) {
+        Claims userClaims = (Claims) request.getAttribute("user_claims");
+        if (userClaims == null || !userClaims.get("roles").equals("user")) {
+            return new Result(false, StatusCode.ACCESSERROR, "权限不足");
+        }
         problemService.add(problem);
         return new Result(true, StatusCode.OK, "增加成功");
     }
@@ -111,9 +129,8 @@ public class ProblemController {
     @RequestMapping(value = "/newlist/{labelId}/{page}/{size}", method = RequestMethod.GET)
     public Result newlist(@PathVariable String labelId, @PathVariable Integer page, @PathVariable Integer size) {
         Page<Problem> problemPage = problemService.newlist(labelId, page, size);
-        return new Result(true, StatusCode.OK, "最新问答列表查询成功",new PageResult<>(problemPage.getTotalElements(),problemPage.getContent()));
+        return new Result(true, StatusCode.OK, "最新问答列表查询成功", new PageResult<>(problemPage.getTotalElements(), problemPage.getContent()));
     }
-
 
 
     /*
@@ -122,7 +139,7 @@ public class ProblemController {
     @RequestMapping(value = "/hotlist/{labelId}/{page}/{size}", method = RequestMethod.GET)
     public Result hotlist(@PathVariable String labelId, @PathVariable Integer page, @PathVariable Integer size) {
         Page<Problem> problemPage = problemService.hotlist(labelId, page, size);
-        return new Result(true, StatusCode.OK, "热门问答列表查询成功",new PageResult<>(problemPage.getTotalElements(),problemPage.getContent()));
+        return new Result(true, StatusCode.OK, "热门问答列表查询成功", new PageResult<>(problemPage.getTotalElements(), problemPage.getContent()));
     }
 
     /*
@@ -130,7 +147,22 @@ public class ProblemController {
     @RequestMapping(value = "/waitlist/{labelId}/{page}/{size}", method = RequestMethod.GET)
     public Result waitlist(@PathVariable String labelId, @PathVariable Integer page, @PathVariable Integer size) {
         Page<Problem> problemPage = problemService.waitlist(labelId, page, size);
-        return new Result(true, StatusCode.OK, "等待回答列表查询成功",new PageResult<>(problemPage.getTotalElements(),problemPage.getContent()));
+        return new Result(true, StatusCode.OK, "等待回答列表查询成功", new PageResult<>(problemPage.getTotalElements(), problemPage.getContent()));
+    }
+
+
+    @Autowired
+    private LabelClient labelClient;
+
+    /**
+     * 问答微服务调用基础微服务
+     * 根据标签id查询标签信息
+     *
+     * @param id
+     */
+    @RequestMapping(value = "/mylabel/{id}", method = RequestMethod.GET)
+    public Result mylabel(@PathVariable String id) {
+        return labelClient.findById(id);
     }
 
 }

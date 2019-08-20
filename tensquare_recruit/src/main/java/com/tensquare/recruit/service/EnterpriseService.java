@@ -1,27 +1,33 @@
 package com.tensquare.recruit.service;
 
-import com.tensquare.recruit.dao.EnterpriseDao;
-import com.tensquare.recruit.pojo.Enterprise;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import util.IdWorker;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import util.IdWorker;
+
+import com.tensquare.recruit.dao.EnterpriseDao;
+import com.tensquare.recruit.pojo.Enterprise;
+
 /**
- * @author
- * @ClassName: EnterpriseService
- * @Description(描叙): 企业信息业务
- * @date 2019/8/14 11:10
+ * 服务层
+ *
+ * @author Administrator
  */
 @Service
 public class EnterpriseService {
@@ -34,11 +40,13 @@ public class EnterpriseService {
 
     /**
      * 查询全部列表
+     *
      * @return
      */
-    public List<Enterprise> findAll(){
+    public List<Enterprise> findAll() {
         return enterpriseDao.findAll();
     }
+
 
     /**
      * 条件查询+分页
